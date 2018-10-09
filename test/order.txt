@@ -1,3 +1,1 @@
 wheel < numpy
-numpy < abc
-
