@@ -1,17 +1,17 @@
 import sys
+from itertools import groupby
+from operator import itemgetter
+
 
 def partition(order, data):
-    for left, right in order:
-        if right in data:
-            print(left, right)
-            memory = []
-            while left in data:
-                data.remove(left)
-                memory.append(left)
+    values = {d: 0 for d in data}
 
-            index = data.index(right)
-            while memory:
-                data.insert(index, memory.pop())
+    for _ in range(len(order)):
+        for before, after in order:
+            values[before] = values[after] - 1
+
+    for _, part in groupby(sorted(values, key=values.get), key=values.get):
+        yield list(part)
 
 
 def parse_order(order_lines):
@@ -22,17 +22,20 @@ def parse_order(order_lines):
         if op == '>':
             yield right, left
 
+
 def main(args):
     order_file = args.pop(0)
     with open(order_file) as f:
         raw_order = [line.strip() for line in f if line.strip()]
         order = list(parse_order(raw_order))
+
     data = []
     for path in args:
         with open(path) as f:
             data.extend([line.strip() for line in f if line.strip()])
-    partition(order, data)
-    print(data)
+
+    for part in partition(order, data):
+        print(part)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
