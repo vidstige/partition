@@ -11,7 +11,9 @@ Then using an input like this
     more-stuff
     wheel
 
-it can partition it into three parts
+it can partition it into three parts by running the module
+
+    $python -m partition test/order.txt test/requirements.txt
 
     ['wheel']
     ['numpy']
