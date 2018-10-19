@@ -23,16 +23,18 @@ def parse_order(order_lines):
             yield right, left
 
 
+def _slurp(path):
+     with open(path) as f:
+        return [line.strip() for line in f if line.strip()]
+
+
 def main(args):
     order_file = args.pop(0)
-    with open(order_file) as f:
-        raw_order = [line.strip() for line in f if line.strip()]
-        order = list(parse_order(raw_order))
+    order = list(parse_order(_slurp(order_file)))
 
     data = []
     for path in args:
-        with open(path) as f:
-            data.extend([line.strip() for line in f if line.strip()])
+        data.extend(_slurp(path))
 
     for part in partition(order, data):
         print(part)
